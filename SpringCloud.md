@@ -28,7 +28,9 @@
 
 ​	SpringCloud是微服务的一种实现，是分布式架构下的一站式解决方案，是微服务架构落地技术的集合体。SpringCloud依赖SpringBoot，SpringCloud将SpringBoot开发的单体微服务整合起来，为微服务之间提供服务发现、配置和路由等各种功能。
 
-​	1. 服务注册与发现：Eureka [juˈriːkə]    [ j ]音标类似于 ye的发音
+	1. 服务注册与发现：Eureka [juˈriːkə]    [ j ]音标类似于 ye的发音
+ 	2. 负载均衡：Ribbon  [ˈrɪbən] 客户端负载均衡
+ 	3. 负载均衡：Feign   [feɪn] 
 
 #二、SpringCloud工程
 
@@ -60,7 +62,7 @@
 </dependencyManagement>
 ```
 
-##1. 服务注册中心Eureka
+##2. 服务注册中心Eureka
 
 ​	Eureka是一个基于Rest的服务，用户服务注册与发现，他通过服务标识符就可访问到服务。Eureka包含两个组件，EurekaServer和EurekaClient。
 
@@ -223,7 +225,7 @@ public class ProviderApplication18081 {
    instance.getUri();
    ```
 
-### 4. EurekaServer集群
+### 4）EurekaServer集群
 
  1. 修改EurekaServer的application，defaultZone配置除本机节点外的其他节地址
 
@@ -237,3 +239,78 @@ public class ProviderApplication18081 {
     http://tian1.com:19001/eureka/,http://tian2.com:19002/eureka/
     ```
 
+##3. 负载均衡Ribbon
+
+​	Ribbon是客户端负载均衡工具，主要提供客户端软件负载均衡算法，可用自定义负载均衡算法。消费方从注册中心获取有哪些服务可用，然后选择一个合适的服务器。
+
+1. 在消费端添加坐标
+
+   ```
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+   </dependency>
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-config</artifactId>
+   </dependency>
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+   </dependency>
+   ```
+
+2. 在客户端RestTemplate上添加注解@LoadBalanced
+
+   ```
+   @LoadBalanced
+   public RestTemplate restTemplate() {
+       return new RestTemplate();
+   }
+   ```
+
+3. 启动引导类添加@EnableEurekaClient
+
+4. 客户端Rest调用接口中的IP和端口信息改为微服务的名字，此时通可过微服务名调用，不再关注IP和端口
+
+   ```
+   restTemplate.getForObject("http://localhost:18081/provider/id/" + id,User.class);
+   restTemplate.getForObject("http://providers18081/provider/id/" + id,User.class);
+   ```
+
+5. 服务端需要有统一的服务名，客户端通过服务名调用，此时是默认的轮询负载均衡算法
+
+6. 使用Ribbon定义的算法，在配置文件中注入指定算法的Bean即可，定义好的算法有7种
+
+   ```
+   @Bean
+   public IRule iRule() {
+   	return new RoundRobinRule();  // 默认的轮询算法
+   }
+   RandomRule  //随机算法
+   RetryRule   //若出现多次故障则跳过此服务
+   ```
+
+7. 自定义负载均衡算法
+
+   1. 启动类添加@RibbonClient(name="providers",configuration = MyRule.class)
+
+      指定服务名，指定自定义配置类，**自定义的配置类不能在包扫描下**。
+
+      拷贝github的算法类源码，修改成自己的 ，返回即可. . . 
+
+      ```
+      @Configuration
+      public class MyRule {
+          @Bean
+          public IRule iRule() {
+              return new MyRule();   // MyRule是自定义的规则类
+          }
+      }
+      ```
+
+## 4. feign负载均衡
+
+​	之前调用服务端方法是通过RestTemplate的方式，而Feign则在此基础上做了进一步的封装，简化了开发。
+
+​	

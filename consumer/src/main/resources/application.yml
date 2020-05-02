@@ -5,3 +5,8 @@ spring:
   application:
     name: consumer
 
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+          defaultZone:  http://tian1.com:17001/eureka/,http://tian2.com:17002/eureka/,http://tian3.com:17003/eureka/

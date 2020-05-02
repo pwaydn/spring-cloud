@@ -1,5 +1,5 @@
 server:
-  port: 18081
+  port: 18082
 
 mybatis:
   type-aliases-package: com.tiantian.entity
@@ -14,7 +14,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql:///tian1?serverTimezone=GMT
+    url: jdbc:mysql:///tian2?serverTimezone=GMT
     username: root
     password: root
     dbcp2:
@@ -28,7 +28,7 @@ eureka:
       defaultZone:  http://tian1.com:17001/eureka/,http://tian2.com:17002/eureka/,http://tian3.com:17003/eureka/
   instance:
       prefer-ip-address: true                       # 配置status那块的地址信息显示IP
-      instance-id: providers18081                   # 配置服务status那块的名字
+      instance-id: providers18082                   # 配置服务status那块的名字
 
 info:
   app.name: provider project

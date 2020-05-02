@@ -14,6 +14,8 @@
         <module name="eureka3" />
         <module name="provider" />
         <module name="provider1" />
+        <module name="provider2" />
+        <module name="provider3" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
@@ -25,6 +27,8 @@
       <module name="eureka3" target="1.8" />
       <module name="provider" target="1.8" />
       <module name="provider1" target="1.8" />
+      <module name="provider2" target="1.8" />
+      <module name="provider3" target="1.8" />
       <module name="spring-cloud" target="1.8" />
     </bytecodeTargetLevel>
   </component>

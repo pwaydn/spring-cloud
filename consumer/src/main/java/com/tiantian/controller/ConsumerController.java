@@ -12,21 +12,24 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 @RequestMapping("/consumer")
 public class ConsumerController {
+//    private static final String RestUrlPrefix = "http://localhost:18081";
+    private static final String RestUrlPrefix = "http://providers";
+
     @Autowired
     private RestTemplate restTemplate;
 
     @RequestMapping("/findOne")
     public User id() {
-        return restTemplate.getForObject("http://localhost:18081/provider/findOne",User.class);
+        return restTemplate.getForObject(RestUrlPrefix +  "/provider/findOne",User.class);
     }
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
     public User id(@PathVariable Integer id) {
-        return restTemplate.getForObject("http://localhost:18081/provider/id/" + id,User.class);
+        return restTemplate.getForObject(RestUrlPrefix + "/provider/id/" + id,User.class);
     }
 
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
     public String addUser(@RequestBody User user){
-        return restTemplate.postForObject("http://localhost:18081/provider/addUser",user,String.class);
+        return restTemplate.postForObject(RestUrlPrefix + "/provider/addUser",user,String.class);
     }
 }
