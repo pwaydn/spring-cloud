@@ -1,0 +1,12 @@
+server:
+  port: 17002
+eureka:
+  instance:
+    hostname: tian2.com
+  client:
+    register-with-eureka: false    # 不注册
+    fetch-registry: false          # 不扫描
+    service-url:
+      defaultZone: http://tian1.com:17001/eureka/,http://tian3.com:17003/eureka/
+  server:
+    enable-self-preservation: true    # 自我保护机制 默认true 保留暂时失联的服务，随心跳恢复而恢复
