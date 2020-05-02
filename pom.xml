@@ -18,6 +18,8 @@
         <module>consumer</module>
         <module>provider2</module>
         <module>provider3</module>
+        <module>feign-provider</module>
+        <module>feign-consumer</module>
     </modules>
     <packaging>pom</packaging>
 

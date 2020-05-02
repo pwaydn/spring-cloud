@@ -1,0 +1,37 @@
+server:
+  port: 18081
+
+mybatis:
+  type-aliases-package: com.tiantian.entity
+  mapper-locations: com/tiantian/mapper/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+spring:
+  application:
+    name: feignprovider18081
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///tian?serverTimezone=GMT
+    username: root
+    password: root
+    dbcp2:
+      min-idle: 5
+      initial-size: 5
+      max-total: 5
+      max-wait-millis: 200
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:17001/eureka/   # 单机交互地址集群交互地址
+  instance:
+      prefer-ip-address: true                       # 配置status那块的地址信息显示IP
+      instance-id: feignprovider18081                    # 配置服务status那块的名字
+
+info:
+  app.name: provider project
+  company.name: www.tiantian.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$

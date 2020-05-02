@@ -309,8 +309,32 @@ public class ProviderApplication18081 {
       }
       ```
 
-## 4. feign负载均衡
+## 4. feign远程调用
 
 ​	之前调用服务端方法是通过RestTemplate的方式，而Feign则在此基础上做了进一步的封装，简化了开发。
 
-​	
+ 1. 服务端开发
+
+    注册服务即可
+
+	2. 消费端
+
+    	1. 启动类添加注解
+
+    ```
+    @EnableEurekaClient
+    @EnableFeignClients("com.tiantian.feign")
+    ```
+
+    2. 服务调用接口，指定服务名和方法对应的全路径，@PathVariable必须有别名
+
+    ```
+    @FeignClient("feignprovider18081")
+    public interface ConsumerService {
+    
+        @RequestMapping(value = "/provider/id/{id}", method = RequestMethod.GET)
+        public User findById(@PathVariable("id") Integer id);
+    }
+    ```
+
+    3. 在Controller中注入接口调用类调用方法

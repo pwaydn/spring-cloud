@@ -8,6 +8,8 @@
       <module fileurl="file://$PROJECT_DIR$/eureka1/eureka1.iml" filepath="$PROJECT_DIR$/eureka1/eureka1.iml" />
       <module fileurl="file://$PROJECT_DIR$/eureka2/eureka2.iml" filepath="$PROJECT_DIR$/eureka2/eureka2.iml" />
       <module fileurl="file://$PROJECT_DIR$/eureka3/eureka3.iml" filepath="$PROJECT_DIR$/eureka3/eureka3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/feign-consumer/feign-consumer.iml" filepath="$PROJECT_DIR$/feign-consumer/feign-consumer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/feign-provider/feign-provider.iml" filepath="$PROJECT_DIR$/feign-provider/feign-provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/provider/provider.iml" filepath="$PROJECT_DIR$/provider/provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/provider1/provider1.iml" filepath="$PROJECT_DIR$/provider1/provider1.iml" />
       <module fileurl="file://$PROJECT_DIR$/provider2/provider2.iml" filepath="$PROJECT_DIR$/provider2/provider2.iml" />
