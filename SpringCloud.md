@@ -28,9 +28,12 @@
 
 ​	SpringCloud是微服务的一种实现，是分布式架构下的一站式解决方案，是微服务架构落地技术的集合体。SpringCloud依赖SpringBoot，SpringCloud将SpringBoot开发的单体微服务整合起来，为微服务之间提供服务发现、配置和路由等各种功能。
 
-	1. 服务注册与发现：Eureka [juˈriːkə]    [ j ]音标类似于 ye的发音
+1. 服务注册与发现：Eureka [juˈriːkə]    [ j ]音标类似于 ye的发音
+
  	2. 负载均衡：Ribbon  [ˈrɪbən] 客户端负载均衡
  	3. 负载均衡：Feign   [feɪn] 
+   	4. 熔断器：Hystrix
+   	5. 仪表盘：HystrixDashboard  监控
 
 #二、SpringCloud工程
 
@@ -309,7 +312,7 @@ public class ProviderApplication18081 {
       }
       ```
 
-## 4. feign远程调用
+## 4. 远程调用feign
 
 ​	之前调用服务端方法是通过RestTemplate的方式，而Feign则在此基础上做了进一步的封装，简化了开发。
 
@@ -408,3 +411,134 @@ public class ProviderApplication18081 {
        public User findOne();
    }
    ```
+
+##6. 仪表盘HystrixDashboard（2.x版本未测通）
+
+1. 创建工程导入坐标
+
+   ```
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+   </dependency>
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+   </dependency>
+   <dependency>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-actuator</artifactId>
+   </dependency>
+   ```
+
+2. 引导启动类添加开启注解，配置文件指定服务端口
+
+   ```
+   @EnableHystrixDashboard
+   ```
+
+3. 被监控的服务要依赖actuator，并开启断路器@EnableCircuitBreaker
+
+   ```
+   <dependency>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-actuator</artifactId>
+   </dependency>
+   ```
+
+4. 暴露 Actuator 的所有端点的
+
+   ```
+   management:
+     endpoints:
+       web:
+         exposure:
+           include: '*'
+     endpoint:
+         health:
+           show-details: ALWAYS
+   ```
+
+5. 启动服务，此时可以访问到主页
+
+   地址：http://localhost:10001/hystrix  // 10001是自己定义的端口
+
+6. 表盘数据
+
+   1. 一列有色数据是对应右边表头同种颜色数据
+   2. 圈代表目前调用频次，越大越多，颜色绿、黄、橙、红。线则记录了时间线调用频率，
+
+##7. 路由网关Zuul
+
+​	将外部请求转发到微服务实例上，实现外部访问统一接口。注册入微服务，然后获取其他微服务信息，管理。
+
+ 1. 导入坐标
+
+    ```
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    ```
+
+	2. 启动类开启网关
+
+    ```
+    @EnableZuulProxy
+    ```
+
+	3. 配置服务端口，注册服务，和路由修改
+
+    ```
+    server:
+      port: 10002
+    
+    spring:
+      application:
+        name: zuul10002
+    
+    eureka:
+      client:
+        service-url:
+          defaultZone: http://localhost:17001/eureka/   # 单机交互地址集群交互地址
+      instance:
+          prefer-ip-address: true                       # 配置status那块的地址信息显示IP
+          instance-id: zuul10002                    # 配置服务status那块的名字
+    
+    info:
+      app.name: provider project
+      company.name: www.tiantian.com
+      build.artifactId: $project.artifactId$
+      build.version: $project.version$
+    
+    zuul:
+      prefix: /tiantian                          # 微服务地址的前缀
+      routes:
+        mydept.serviceId: feignprovider18081    # 真微服务名字
+        mydept.path: /tianzuul/**               # 代理地址，用此替换微服务名字
+      ignored-services: feignprovider18081      # 禁用真实微服务地址
+      # ignored-services: "*"   禁用所有微服务名
+    
+    # 微服务地址 http://localhost:10002/feignprovider18081/feignProvider/id/23
+    # 代理地址：http://localhost:10002/tianzuul/feignProvider/id/29
+    # 加前缀后：http://localhost:10002/tiantian/tianzuul/feignProvider/id/28
+    # 微服务地址被禁用，代理地址加了前缀，最终访问地址是第三个
+    ```
+
+	4. 测试访问
+
+    http://网关域名:端口/微服务名/访问路径      // 注意是Provider
+
+    ```
+    http://localhost:10002/tiantian/tianzuul/feignProvider/id/28
+    ```
+
+​	

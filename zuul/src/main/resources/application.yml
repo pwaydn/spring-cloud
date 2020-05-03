@@ -1,0 +1,33 @@
+server:
+  port: 10002
+
+spring:
+  application:
+    name: zuul10002
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:17001/eureka/   # 单机交互地址集群交互地址
+  instance:
+      prefer-ip-address: true                       # 配置status那块的地址信息显示IP
+      instance-id: zuul10002                    # 配置服务status那块的名字
+
+info:
+  app.name: provider project
+  company.name: www.tiantian.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$
+
+zuul:
+  prefix: /tiantian                          # 微服务地址的前缀
+  routes:
+    mydept.serviceId: feignprovider18081    # 真微服务名字
+    mydept.path: /tianzuul/**               # 代理地址，用此替换微服务名字
+  ignored-services: feignprovider18081      # 禁用真实微服务地址
+  # ignored-services: "*"   禁用所有微服务名
+
+# 微服务地址 http://localhost:10002/feignprovider18081/feignProvider/id/23
+# 代理地址：http://localhost:10002/tianzuul/feignProvider/id/29
+# 加前缀后：http://localhost:10002/tiantian/tianzuul/feignProvider/id/28
+# 微服务地址被禁用，代理地址加了前缀，最终访问地址是第三个

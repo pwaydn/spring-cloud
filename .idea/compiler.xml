@@ -14,10 +14,12 @@
         <module name="eureka3" />
         <module name="feign-consumer" />
         <module name="feign-provider" />
+        <module name="hystrix-dashboard" />
         <module name="provider" />
         <module name="provider1" />
         <module name="provider2" />
         <module name="provider3" />
+        <module name="zuul" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
@@ -29,11 +31,13 @@
       <module name="eureka3" target="1.8" />
       <module name="feign-consumer" target="1.8" />
       <module name="feign-provider" target="1.8" />
+      <module name="hystrix-dashboard" target="1.8" />
       <module name="provider" target="1.8" />
       <module name="provider1" target="1.8" />
       <module name="provider2" target="1.8" />
       <module name="provider3" target="1.8" />
       <module name="spring-cloud" target="1.8" />
+      <module name="zuul" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

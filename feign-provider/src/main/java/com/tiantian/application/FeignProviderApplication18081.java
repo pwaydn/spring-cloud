@@ -15,6 +15,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan("com.tiantian")
 @MapperScan("com.tiantian.mapper")
 @EnableEurekaClient                 // 注册
+@EnableCircuitBreaker
 public class FeignProviderApplication18081 {
     public static void main(String[] args) {
         SpringApplication.run(FeignProviderApplication18081.class,args);
