@@ -19,7 +19,7 @@ import java.util.Date;
 @Accessors(chain = true)     // 链式风格访问
 @SuppressWarnings("serial")  // 压制警告
 public class User implements Serializable{
-    private String id;
+    private Integer id;
     private String username;
     private String password;
     private String nickname;

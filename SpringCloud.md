@@ -338,3 +338,73 @@ public class ProviderApplication18081 {
     ```
 
     3. 在Controller中注入接口调用类调用方法
+
+## 5. 熔断器Hystrix
+
+​	微服务架构中，服务端程序异常，长时间没回应，会造成服务雪崩，导致更多级联故障，因此需要对故障隔离处理，以便单个应用失败，不再影响整个系统的运行。
+
+​	熔断器在服务单元发生故障后，通过故障监控，会返回调用方一个可处理的备选响应(FallBack)，保证服务调用方线程不被不必要的占用，从而避免整个系统的雪崩。熔断器默认5秒内20次调用失败就会启动熔断机制。
+
+1. 服务端导入熔断器坐标
+
+   ```
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+   </dependency>
+   ```
+
+2. 开启熔断器
+
+   启动引导类添加注解@EnableCircuitBreaker
+
+3. 1 在服务端定义熔断： 定义熔断方法，并在方法上指定
+
+   ```
+   @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
+   @HystrixCommand(fallbackMethod = "hystrix")
+   public User findById(@PathVariable("id") Integer id) {
+       return providerService.id(id);
+   }
+   
+   public User hystrix(@PathVariable("id") Integer id) {
+       return new User().setNickname("服务熔断！").setId(id);
+   }
+   ```
+
+3. 2 在客户端定义熔断：配置文件开启熔断器，定义熔断方法类，在Feign调用服务接口指定熔断工厂
+
+   ```
+   feign:
+     hystrix:
+       enabled: true
+   ```
+
+   ```
+   @Component
+   public class FallbackA implements FallbackFactory<ConsumerService>{
+       @Override
+       public ConsumerService create(Throwable throwable) {
+           return new ConsumerService() {
+               @Override
+               public User findById(Integer id) {
+                   return null;
+               }
+   
+               @Override
+               public User findOne() {
+                   return null;
+               }
+           }
+       }
+   }
+   
+   @FeignClient(value = "feignprovider18081", fallbackFactory = FallbackA.class)
+   public interface ConsumerService {
+       @RequestMapping(value = "/feignProvider/id/{id}", method = RequestMethod.GET)
+       public User findById(@PathVariable("id") Integer id);
+   
+       @RequestMapping(value = "/feignProvider/findOne", method = RequestMethod.GET)
+       public User findOne();
+   }
+   ```
