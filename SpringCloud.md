@@ -541,4 +541,73 @@ public class ProviderApplication18081 {
     http://localhost:10002/tiantian/tianzuul/feignProvider/id/28
     ```
 
-​	
+## 8. SpringCloudConfig
+
+ 为微服务架构提供集中化的外部配置支持，配置服务器为各个不同的微服务应用的所有环境提供了中心化的外部配置。配置发生变化时服务不需要重启即可感知到配置变化并应用。
+
+1. 创建工程导入依赖
+
+   ```
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-config-server</artifactId>
+   </dependency>
+   ```
+
+2. 创建上传git配置文件
+
+   ```
+   spring:
+     profiles:
+       active:
+       - dev
+   ---
+   spring:
+     profiles: dev
+     application:
+       name: tian-dev
+   ---
+   spring:
+     profiles: test
+     application:
+       name: tian-test
+   ```
+
+   
+
+3. 引导启动类开启注解
+
+   ```
+   @EnableConfigServer
+   ```
+
+4. 配置端口号，服务名，git等信息
+
+   ```
+   server:
+     port: 10003
+   spring:
+     application:
+       name: tiantianconfig
+     cloud:
+       config:
+         server:
+           git:
+             uri: https://github.com/pwaydn/cloud-config.git
+             search-paths: /**         # 路径
+             default-label: master     # 分支
+             username: your account
+             password: your password
+   ```
+
+4. 启动，访问
+
+   第一种方式：http://localhost:10003/application-dev.yml
+
+   第二种方式：http://localhost:10003/master/application-dev.yml
+
+   第二种方式：http://localhost:10003/application/test/master
+
+   前两种的格式一样，第三种是Json格式
+
+   
