@@ -23,6 +23,7 @@
         <module>hystrix-dashboard</module>
         <module>zuul</module>
         <module>cloud-config</module>
+        <module>config-client1</module>
     </modules>
     <packaging>pom</packaging>
 

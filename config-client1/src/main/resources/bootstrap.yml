@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+      name: tian
+      profile: test     # 配置项
+      label: master    # 分支
+      uri: http://localhost:10003   # Config服务的域名端口，通过Config服务找到配置文件

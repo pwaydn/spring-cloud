@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="cloud-config" />
         <module name="common" />
+        <module name="config-client1" />
         <module name="consumer" />
         <module name="eureka" />
         <module name="eureka1" />
@@ -26,6 +27,7 @@
     <bytecodeTargetLevel target="1.8">
       <module name="cloud-config" target="1.8" />
       <module name="common" target="1.8" />
+      <module name="config-client1" target="1.8" />
       <module name="consumer" target="1.8" />
       <module name="eureka" target="1.8" />
       <module name="eureka1" target="1.8" />
