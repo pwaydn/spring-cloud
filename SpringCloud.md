@@ -610,4 +610,35 @@ public class ProviderApplication18081 {
 
    前两种的格式一样，第三种是Json格式
 
+5. 客户端读取配置文件
+
+   1. 导入依赖
+
+      ```
+      <dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-starter-config</artifactId>
+      </dependency>
+      ```
+
+   2. 创建配置文件application.yml和bootstrap.yml，后者比application.yml优先级高
+
+      application.yml 配置一些信息，就跟壹菲那会一样，其他信息在dev中
    
+      ```
+      spring:
+        application:
+          name: configclient1
+      ```
+   
+      bootstrap.yml 配置微服务配置中心的地址，git中配置文件配置项的配置会覆盖application.yml中的
+   
+      ```
+      spring:
+        cloud:
+          config:
+            name: tian		# git中配置文件的名字
+            profile: test     # 配置项
+            label: master     # 分支
+            uri: http://localhost:10003   # Config服务的域名端口，通过Config服务找到配置文件
+      ```
